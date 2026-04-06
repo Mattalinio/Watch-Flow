@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Watch Flow | The Collection</title>
+    <meta
+      name="description"
+      content="Browse the current Watch Flow collection of premium pre-owned watches."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link id="dynamic-favicon" rel="icon" href="" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="collection">
+    <div class="site-shell">
+      <header class="site-header" id="site-header">
+        <a href="index.html" class="nav-logo">
+          <div class="logo-box">WF</div>
+          <span class="logo-name">WATCH FLOW</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Toggle navigation"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav">
+          <a class="is-active" href="collection.html">Collection</a>
+          <a href="verkoop.html">Verkoop</a>
+          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">Contact</a>
+        </nav>
+      </header>
+
+      <main class="page-main">
+        <section class="page-header">
+          <h1>The Collection</h1>
+          <p>Currently available timepieces</p>
+        </section>
+
+        <div class="filter-bar">
+          <button class="filter-tab is-active" type="button" data-filter="all">All</button>
+          <button class="filter-tab" type="button" data-filter="rolex">Rolex</button>
+          <button class="filter-tab" type="button" data-filter="audemars-piguet">Audemars Piguet</button>
+          <button class="filter-tab" type="button" data-filter="omega">Omega</button>
+          <button class="filter-tab" type="button" data-filter="other">Other</button>
+        </div>
+
+        <section class="watch-grid collection-grid" id="collection-grid"></section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="nav-logo footer-brand" aria-label="Watch Flow">
+          <div class="logo-box">WF</div>
+          <span class="logo-name">WATCH FLOW</span>
+        </div>
+        <p class="footer-tagline">Pre-owned timepieces. Personal service. Amsterdam.</p>
+        <div class="footer-links">
+          <a href="collection.html">Collection</a>
+          <a href="verkoop.html">Verkoop</a>
+          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a href="#">Instagram</a>
+        </div>
+        <p class="footer-copy">© 2025 Watch Flow</p>
+      </footer>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>

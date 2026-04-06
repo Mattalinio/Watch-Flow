@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Watch Flow | Verkoop Je Horloge</title>
+    <meta
+      name="description"
+      content="Verkoop je horloge via Watch Flow en ontvang binnen 24 uur een concreet bod."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link id="dynamic-favicon" rel="icon" href="" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body data-page="verkoop">
+    <div class="site-shell">
+      <header class="site-header" id="site-header">
+        <a href="index.html" class="nav-logo">
+          <div class="logo-box">WF</div>
+          <span class="logo-name">WATCH FLOW</span>
+        </a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Toggle navigation"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav">
+          <a href="collection.html">Collection</a>
+          <a class="is-active" href="verkoop.html">Verkoop</a>
+          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">Contact</a>
+        </nav>
+      </header>
+
+      <main class="page-main">
+        <section class="page-header">
+          <h1><em>Verkoop Je Horloge</em></h1>
+          <p>Eerlijke marktprijs. Reactie binnen 24 uur.</p>
+        </section>
+
+        <section class="sell-layout">
+          <div class="sell-signals">
+            <article class="sell-signal reveal">
+              <span class="signal-number">01</span>
+              <div class="signal-copy">
+                <h2>Snelle Beoordeling</h2>
+                <p>
+                  Stuur je horloge in via het formulier. Reactie binnen 24 uur met
+                  een concreet bod.
+                </p>
+              </div>
+            </article>
+            <article class="sell-signal reveal reveal-delay">
+              <span class="signal-number">02</span>
+              <div class="signal-copy">
+                <h2>Eerlijke Marktprijs</h2>
+                <p>
+                  Wij betalen op basis van actuele marktwaarde. Transparant en
+                  zonder verrassingen.
+                </p>
+              </div>
+            </article>
+            <article class="sell-signal reveal">
+              <span class="signal-number">03</span>
+              <div class="signal-copy">
+                <h2>Veilige Afhandeling</h2>
+                <p>
+                  Persoonlijke overdracht in Amsterdam of via verzekerd en
+                  verzekerd transport.
+                </p>
+              </div>
+            </article>
+          </div>
+
+          <form class="sell-form" action="#" method="post" enctype="multipart/form-data">
+            <div class="field-row">
+              <label class="field">
+                <span>Naam</span>
+                <input type="text" name="name" required />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" required />
+              </label>
+            </div>
+
+            <label class="field">
+              <span>Telefoonnummer (optioneel)</span>
+              <input type="tel" name="phone" />
+            </label>
+
+            <label class="field">
+              <span>Merk &amp; Model</span>
+              <input type="text" name="model" />
+            </label>
+
+            <label class="field">
+              <span>Referentienummer (optioneel)</span>
+              <input type="text" name="reference" />
+            </label>
+
+            <label class="field">
+              <span>Conditie</span>
+              <select name="condition">
+                <option value="">Selecteer conditie</option>
+                <option>Ongedragen</option>
+                <option>Zeer Goed</option>
+                <option>Goed</option>
+                <option>Beschadigd</option>
+              </select>
+            </label>
+
+            <label class="upload-field">
+              <input type="file" name="images" accept="image/*" />
+              <span>Sleep foto's hier naartoe of klik om te uploaden</span>
+            </label>
+
+            <label class="field">
+              <span>Opmerkingen</span>
+              <textarea name="notes" rows="6"></textarea>
+            </label>
+
+            <p class="form-note">
+              Watch Flow hanteert vaste inkoopprijzen op basis van de actuele
+              marktwaarde. Na beoordeling van uw aanvraag ontvangt u een concreet
+              bod zonder verplichtingen.
+            </p>
+
+            <button class="submit-button" type="submit">Stuur Aanbieding →</button>
+          </form>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <div class="nav-logo footer-brand" aria-label="Watch Flow">
+          <div class="logo-box">WF</div>
+          <span class="logo-name">WATCH FLOW</span>
+        </div>
+        <p class="footer-tagline">Pre-owned timepieces. Personal service. Amsterdam.</p>
+        <div class="footer-links">
+          <a href="collection.html">Collection</a>
+          <a href="verkoop.html">Verkoop</a>
+          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a href="#">Instagram</a>
+        </div>
+        <p class="footer-copy">© 2025 Watch Flow</p>
+      </footer>
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+</html>
