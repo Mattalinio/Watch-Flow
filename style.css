@@ -177,6 +177,10 @@ img {
   background-repeat: no-repeat;
   animation: hero-breathe 14s ease-in-out infinite;
   will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .hero-overlay {
@@ -1115,16 +1119,19 @@ h2 {
 @media (max-width: 768px) {
   .hero-img {
     animation-duration: 20s;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .hero-img-wrap {
     inset: -3%;
+    -webkit-transform: translateZ(0);
   }
 
   .hero-watermark {
     width: 95vw;
     height: 95vw;
-    opacity: 0.03;
+    opacity: 0.08;
   }
 }
 
