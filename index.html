@@ -15,14 +15,17 @@
       rel="stylesheet"
     />
     <link id="dynamic-favicon" rel="icon" href="" />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css?v=home9" />
   </head>
   <body data-page="home">
     <div class="site-shell">
       <header class="site-header" id="site-header">
-        <a href="index.html" class="nav-logo">
-          <div class="logo-box">WF</div>
-          <span class="logo-name">WATCH FLOW</span>
+        <a href="index.html" class="nav-logo" aria-label="Watch Flow home">
+          <img
+            class="nav-logo-image"
+            src="images/logo/watchflow-logo-transparent.png"
+            alt="Watch Flow"
+          />
         </a>
 
         <button
@@ -39,8 +42,8 @@
 
         <nav class="site-nav" id="site-nav">
           <a href="collection.html">Collection</a>
-          <a href="verkoop.html">Verkoop</a>
-          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">Contact</a>
+          <a href="contact.html">Contact</a>
+          <a href="verkoop.html" class="nav-cta">Sell Your Watch</a>
         </nav>
       </header>
 
@@ -53,82 +56,46 @@
           <div class="hero-overlay"></div>
 
           <div class="hero-content hero-fade-in">
-            <svg
-              id="hero-clock"
-              class="hero-watermark"
-              viewBox="0 0 200 200"
-              xmlns="http://www.w3.org/2000/svg"
-              aria-hidden="true"
-            >
-              <circle cx="100" cy="100" r="90" fill="none" stroke="#a8c4d4" stroke-width="0.6" />
-              <circle cx="100" cy="100" r="82" fill="none" stroke="#a8c4d4" stroke-width="0.3" />
-              <g id="clock-hour-ticks"></g>
-              <g id="clock-minute-ticks"></g>
-              <line
-                id="clock-hour"
-                x1="100"
-                y1="100"
-                x2="100"
-                y2="58"
-                stroke="#a8c4d4"
-                stroke-width="1.5"
-                stroke-linecap="round"
-              />
-              <line
-                id="clock-minute"
-                x1="100"
-                y1="100"
-                x2="100"
-                y2="43"
-                stroke="#a8c4d4"
-                stroke-width="1"
-                stroke-linecap="round"
-              />
-              <line
-                id="clock-seconds"
-                x1="100"
-                y1="115"
-                x2="100"
-                y2="35"
-                stroke="#a8c4d4"
-                stroke-width="0.6"
-                stroke-linecap="round"
-              />
-              <circle cx="100" cy="100" r="2.5" fill="#a8c4d4" />
-              <circle cx="100" cy="100" r="1.2" fill="#12151e" />
-            </svg>
-            <div class="nav-logo hero-logo-lockup" aria-hidden="true">
-              <div class="logo-box">WF</div>
-              <span class="logo-name">WATCH FLOW</span>
-            </div>
-            <h1>Curated Watches.<br /><span>Verified Quality.</span></h1>
-            <p class="hero-subtext">
-              Handpicked pre-owned timepieces, personally verified. Direct purchase
-              or personal advice.
+<h1 class="fade-up">Find the Watch<br /><span>That Fits Your Story.</span></h1>
+            <p class="hero-subtext fade-in">
+              From timeless classics to modern icons, every piece is selected with care.
             </p>
-            <div class="hero-actions">
-              <a class="button button-secondary" href="collection.html">View Collection</a>
-              <a class="button button-primary" href="collection.html">Buy Direct</a>
+            <div class="hero-actions fade-up">
+              <a class="button hero-btn-primary" href="collection.html">View Collection</a>
+              <a class="button hero-btn-outline" href="verkoop.html">Sell Your Watch</a>
             </div>
           </div>
         </section>
 
-        <section class="trust-bar">
-          <article class="trust-item reveal">
-            <div class="trust-icon" aria-hidden="true">◌</div>
-            <p class="eyebrow">Verified Condition</p>
-            <p class="trust-value">Every watch personally inspected</p>
-          </article>
-          <article class="trust-item reveal reveal-delay">
-            <div class="trust-icon" aria-hidden="true">△</div>
-            <p class="eyebrow">Direct Purchase</p>
-            <p class="trust-value">No middleman. Simple and fast.</p>
-          </article>
-          <article class="trust-item reveal">
-            <div class="trust-icon" aria-hidden="true">▣</div>
-            <p class="eyebrow">Insured Shipping</p>
-            <p class="trust-value">Tracked and fully insured delivery</p>
-          </article>
+        <section class="brand-strip reveal" aria-label="Featured watch brands">
+          <div class="brand-strip-fade brand-strip-fade-left" aria-hidden="true"></div>
+          <div class="brand-strip-fade brand-strip-fade-right" aria-hidden="true"></div>
+          <div class="brand-marquee">
+            <div class="brand-track">
+              <div class="brand-item brand--seiko"><img class="brand-logo" src="assets/brands/Watchflow/SEIKO.png" alt="Seiko" /></div>
+              <div class="brand-item brand--rolex"><img class="brand-logo" src="assets/brands/Watchflow/ROLEX.png" alt="Rolex" /></div>
+              <div class="brand-item brand--tudor"><img class="brand-logo" src="assets/brands/Watchflow/TUDOR.png" alt="Tudor" /></div>
+              <div class="brand-item brand--tissot"><img class="brand-logo" src="assets/brands/Watchflow/TISSOT.png" alt="Tissot" /></div>
+              <div class="brand-item brand--omega"><img class="brand-logo" src="assets/brands/Watchflow/Omega-clean.png" alt="Omega" /></div>
+              <div class="brand-item brand--seiko"><img class="brand-logo" src="assets/brands/Watchflow/SEIKO.png" alt="Seiko" /></div>
+              <div class="brand-item brand--rolex"><img class="brand-logo" src="assets/brands/Watchflow/ROLEX.png" alt="Rolex" /></div>
+              <div class="brand-item brand--tudor"><img class="brand-logo" src="assets/brands/Watchflow/TUDOR.png" alt="Tudor" /></div>
+              <div class="brand-item brand--tissot"><img class="brand-logo" src="assets/brands/Watchflow/TISSOT.png" alt="Tissot" /></div>
+              <div class="brand-item brand--omega"><img class="brand-logo" src="assets/brands/Watchflow/Omega-clean.png" alt="Omega" /></div>
+            </div>
+            <div class="brand-track" aria-hidden="true">
+              <div class="brand-item brand--seiko"><img class="brand-logo" src="assets/brands/Watchflow/SEIKO.png" alt="" /></div>
+              <div class="brand-item brand--rolex"><img class="brand-logo" src="assets/brands/Watchflow/ROLEX.png" alt="" /></div>
+              <div class="brand-item brand--tudor"><img class="brand-logo" src="assets/brands/Watchflow/TUDOR.png" alt="" /></div>
+              <div class="brand-item brand--tissot"><img class="brand-logo" src="assets/brands/Watchflow/TISSOT.png" alt="" /></div>
+              <div class="brand-item brand--omega"><img class="brand-logo" src="assets/brands/Watchflow/Omega-clean.png" alt="" /></div>
+              <div class="brand-item brand--seiko"><img class="brand-logo" src="assets/brands/Watchflow/SEIKO.png" alt="" /></div>
+              <div class="brand-item brand--rolex"><img class="brand-logo" src="assets/brands/Watchflow/ROLEX.png" alt="" /></div>
+              <div class="brand-item brand--tudor"><img class="brand-logo" src="assets/brands/Watchflow/TUDOR.png" alt="" /></div>
+              <div class="brand-item brand--tissot"><img class="brand-logo" src="assets/brands/Watchflow/TISSOT.png" alt="" /></div>
+              <div class="brand-item brand--omega"><img class="brand-logo" src="assets/brands/Watchflow/Omega-clean.png" alt="" /></div>
+            </div>
+          </div>
         </section>
 
         <section class="story-section">
@@ -144,28 +111,88 @@
           </div>
         </section>
 
-        <section class="featured-section">
+        <section class="why-section">
           <div class="section-head reveal">
-            <p class="eyebrow">Featured Drops</p>
+            <p class="section-kicker">Why Watch Flow</p>
+            <h2>Quiet confidence, personal service.</h2>
+          </div>
+          <div class="why-grid">
+            <article class="why-card reveal">
+              <span class="why-index">01</span>
+              <h3>Personally Curated</h3>
+              <p>Every listing is selected for condition, presence, and long-term desirability rather than volume.</p>
+            </article>
+            <article class="why-card reveal reveal-delay">
+              <span class="why-index">02</span>
+              <h3>Transparent Process</h3>
+              <p>Clear communication, honest condition notes, and a straightforward buying experience without marketplace noise.</p>
+            </article>
+            <article class="why-card reveal">
+              <span class="why-index">03</span>
+              <h3>Trusted Exchange</h3>
+              <p>Whether buying or selling, Watch Flow keeps the process personal, secure, and intentionally paced.</p>
+            </article>
+          </div>
+        </section>
+
+<section class="featured-section">
+          <div class="section-head reveal">
+            <p class="section-kicker">Featured Drops</p>
+            <h2>Selected pieces available now.</h2>
           </div>
           <div class="watch-grid featured-grid" id="featured-grid"></div>
           <a class="view-link" href="collection.html">View Full Collection →</a>
         </section>
+
+        <section class="trust-quote-section">
+          <div class="trust-quote reveal">
+            <p class="section-kicker">Client Experience</p>
+            <blockquote>
+              “Watch Flow made the process feel calm, direct, and genuinely personal.”
+            </blockquote>
+            <p class="trust-attribution">Private Client, Amsterdam</p>
+          </div>
+        </section>
+
+        <section class="sell-cta-section">
+          <div class="sell-cta-card reveal">
+            <div class="sell-cta-copy">
+              <p class="section-kicker">Selling With Watch Flow</p>
+              <h2>Ready to part with a watch that deserves the right next owner?</h2>
+              <p>
+                Receive a considered valuation, direct contact, and a secure process tailored to the piece you are offering.
+              </p>
+            </div>
+            <a class="button sell-cta-button" href="verkoop.html">Start Your Offer</a>
+          </div>
+        </section>
       </main>
 
       <footer class="site-footer">
-        <div class="nav-logo footer-brand" aria-label="Watch Flow">
-          <div class="logo-box">WF</div>
-          <span class="logo-name">WATCH FLOW</span>
+        <div class="footer-top">
+          <div class="footer-column footer-brand-block">
+            <img class="footer-logo-img" src="images/logo/watchflow-logo-transparent.png" alt="Watch Flow" />
+            <p class="footer-tagline">Pre-owned timepieces. Personal service. Amsterdam.</p>
+          </div>
+          <div class="footer-column">
+            <p class="footer-heading">Explore</p>
+            <div class="footer-links">
+              <a href="collection.html">COLLECTION</a>
+              <a href="verkoop.html">SELL</a>
+              <a href="contact.html">CONTACT</a>
+            </div>
+          </div>
+          <div class="footer-column">
+            <p class="footer-heading">Connect</p>
+            <div class="footer-links">
+              <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">WHATSAPP</a>
+              <a href="#">INSTAGRAM</a>
+            </div>
+          </div>
         </div>
-        <p class="footer-tagline">Pre-owned timepieces. Personal service. Amsterdam.</p>
-        <div class="footer-links">
-          <a href="collection.html">Collection</a>
-          <a href="verkoop.html">Verkoop</a>
-          <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">WhatsApp</a>
-          <a href="#">Instagram</a>
+        <div class="footer-bottom">
+          <p class="footer-copy">© 2025 WATCH FLOW · Amsterdam, The Netherlands</p>
         </div>
-        <p class="footer-copy">© 2025 Watch Flow</p>
       </footer>
     </div>
 

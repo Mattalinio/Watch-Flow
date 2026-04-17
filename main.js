@@ -89,6 +89,36 @@ const products = [
     boxPapers: "Yes",
     image: "",
   },
+  {
+    id: 7,
+    brand: "Seiko",
+    brandSlug: "seiko",
+    model: "5 Sports SRPE55",
+    ref: "SRPE55K1",
+    price: 199,
+    condition: "Very Good",
+    year: 2022,
+    desc: "Casual Seiko 5 Sports in blue dial. Reliable automatic, great everyday wearer.",
+    movement: "Automatic",
+    caseMaterial: "Stainless Steel",
+    boxPapers: "No",
+    image: "images/products/seiko%20random%201.webp",
+  },
+  {
+    id: 8,
+    brand: "Seiko",
+    brandSlug: "seiko",
+    model: "Prospex Diver",
+    ref: "SPB187J1",
+    price: 649,
+    condition: "Like New",
+    year: 2023,
+    desc: "Seiko Prospex diver in steel. Barely worn, excellent condition with box.",
+    movement: "Automatic",
+    caseMaterial: "Stainless Steel",
+    boxPapers: "Yes",
+    image: "images/products/seiko%20random%202.png",
+  },
 ];
 
 const page = document.body.dataset.page;
@@ -101,6 +131,7 @@ let pageSpinnerOverlay = null;
 const formatPrice = (value) => `€ ${value.toLocaleString("nl-NL")}`;
 let heroClockStarted = false;
 let priceObserver = null;
+let scrollAnimationObserver = null;
 
 const spinnerMarkup = () => `
   <div class="wf-spinner" aria-hidden="true">
@@ -230,6 +261,57 @@ const initHeroClock = () => {
 const conditionClass = (condition) =>
   condition === "Unworn" ? "condition-pill is-unworn" : "condition-pill is-muted";
 
+function initScrollAnimations(scope = document) {
+  if (!("IntersectionObserver" in window)) {
+    scope.querySelectorAll(".fade-in, .fade-up").forEach((element) => {
+      element.classList.add("is-visible");
+    });
+    return;
+  }
+
+  if (!scrollAnimationObserver) {
+    scrollAnimationObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            scrollAnimationObserver.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.2,
+      }
+    );
+  }
+
+  scope.querySelectorAll(".product-card.fade-up").forEach((card) => {
+    if (!card.classList.contains("is-visible")) {
+      scrollAnimationObserver.observe(card);
+    }
+  });
+}
+
+function initHeroSequence() {
+  const heroBadge = document.querySelector(".hero-badge.fade-in");
+  const heroHeading = document.querySelector(".hero h1.fade-up");
+  const heroSubtext = document.querySelector(".hero-subtext.fade-in");
+  const heroActions = document.querySelector(".hero-actions.fade-up");
+
+  [
+    { element: heroBadge, delay: 300 },
+    { element: heroHeading, delay: 500 },
+    { element: heroSubtext, delay: 700 },
+    { element: heroActions, delay: 900 },
+  ].forEach(({ element, delay }) => {
+    if (element) {
+      window.setTimeout(() => {
+        element.classList.add("is-visible");
+      }, delay);
+    }
+  });
+}
+
 function animatePrice(el, targetPrice) {
   const duration = 1400;
   const start = performance.now();
@@ -246,10 +328,13 @@ function animatePrice(el, targetPrice) {
       requestAnimationFrame(update);
     } else {
       el.textContent = `€ ${targetPrice.toLocaleString("nl-NL")}`;
-      el.style.transition = "opacity 0.15s ease";
+      el.style.color = "#2C5F7F";
+      el.style.transition = "opacity 0.15s ease, transform 0.18s ease";
       el.style.opacity = "0.5";
+      el.style.transform = "scale(1.03)";
       window.setTimeout(() => {
         el.style.opacity = "1";
+        el.style.transform = "scale(1)";
       }, 150);
     }
   }
@@ -302,8 +387,8 @@ function initPriceAnimations(scope = document) {
   });
 }
 
-const watchCardTemplate = (product) => `
-  <article class="watch-card product-card reveal is-visible" data-brand="${product.brandSlug}" data-id="${product.id}" data-price="${product.price}">
+const watchCardTemplate = (product, index = 0) => `
+  <article class="watch-card product-card fade-up stagger-${(index % 6) + 1}" data-brand="${product.brandSlug}" data-id="${product.id}" data-price="${product.price}">
     <div class="watch-visual">
       <span class="${conditionClass(product.condition)}">${product.condition}</span>
       ${
@@ -417,10 +502,12 @@ if ("IntersectionObserver" in window && revealElements.length) {
 
 if (page === "home") {
   initHeroClock();
+  initHeroSequence();
   const featuredGrid = document.querySelector("#featured-grid");
 
   if (featuredGrid) {
-    featuredGrid.innerHTML = products.slice(0, 3).map(watchCardTemplate).join("");
+    featuredGrid.innerHTML = products.slice(0, 3).map((product, index) => watchCardTemplate(product, index)).join("");
+    initScrollAnimations(featuredGrid);
     initPriceAnimations(featuredGrid);
     featuredGrid.querySelectorAll(".watch-card").forEach((card) => {
       card.addEventListener("click", () => {
@@ -432,14 +519,29 @@ if (page === "home") {
 
 if (page === "collection") {
   const collectionGrid = document.querySelector("#collection-grid");
-  const filterTabs = document.querySelectorAll(".filter-tab");
+  const brandFilterBar = document.querySelector("#brand-filter-bar");
+
+  if (brandFilterBar) {
+    const uniqueBrands = [...new Map(products.map((p) => [p.brandSlug, p.brand])).entries()];
+    uniqueBrands.forEach(([slug, name]) => {
+      const btn = document.createElement("button");
+      btn.className = "filter-tab";
+      btn.type = "button";
+      btn.dataset.filter = slug;
+      btn.textContent = name.toUpperCase();
+      brandFilterBar.appendChild(btn);
+    });
+  }
+
+  const filterTabs = document.querySelectorAll(".filter-tab[data-filter]");
 
   if (collectionGrid) {
-    collectionGrid.innerHTML = products.map(watchCardTemplate).join("");
+    collectionGrid.innerHTML = products.map((product, index) => watchCardTemplate(product, index)).join("");
     const gridSpinner = document.createElement("div");
     gridSpinner.className = "grid-spinner";
     gridSpinner.innerHTML = spinnerMarkup();
     collectionGrid.appendChild(gridSpinner);
+    initScrollAnimations(collectionGrid);
     initPriceAnimations(collectionGrid);
 
     const cards = Array.from(collectionGrid.querySelectorAll(".watch-card"));
@@ -450,27 +552,77 @@ if (page === "collection") {
       });
     });
 
-    const applyFilter = (filter) => {
+    let activeBrand = "all";
+    let activeSort = "price-high";
+
+    const sortTrigger = document.getElementById("sort-trigger");
+    const sortDropdown = document.getElementById("sort-dropdown");
+    const sortLabel = document.getElementById("sort-label");
+    const sortOptions = document.querySelectorAll(".sort-option");
+
+    const applyBrandFilter = () => {
       cards.forEach((card) => {
-        const match = filter === "all" || card.dataset.brand === filter;
+        const match = activeBrand === "all" || card.dataset.brand === activeBrand;
         card.classList.toggle("is-hidden", !match);
       });
     };
 
+    const applySort = () => {
+      const sorted = [...cards].sort((a, b) => {
+        const pa = Number(a.dataset.price);
+        const pb = Number(b.dataset.price);
+        return activeSort === "price-high" ? pb - pa : pa - pb;
+      });
+      sorted.forEach((card) => collectionGrid.insertBefore(card, gridSpinner));
+    };
+
+    const runWithSpinner = (fn) => {
+      gridSpinner.classList.add("visible");
+      window.setTimeout(() => {
+        fn();
+        gridSpinner.classList.remove("visible");
+        window.setTimeout(() => initScrollAnimations(collectionGrid), 50);
+        window.setTimeout(() => initPriceAnimations(collectionGrid), 50);
+      }, 200);
+    };
+
+    applySort();
+
     filterTabs.forEach((tab) => {
       tab.addEventListener("click", () => {
-        const filter = tab.dataset.filter;
-
+        activeBrand = tab.dataset.filter;
         filterTabs.forEach((item) => item.classList.remove("is-active"));
         tab.classList.add("is-active");
-        gridSpinner.classList.add("visible");
-        window.setTimeout(() => {
-          applyFilter(filter);
-          gridSpinner.classList.remove("visible");
-          window.setTimeout(() => initPriceAnimations(collectionGrid), 50);
-        }, 200);
+        runWithSpinner(applyBrandFilter);
       });
     });
+
+    if (sortTrigger && sortDropdown) {
+      sortTrigger.addEventListener("click", () => {
+        const isOpen = sortDropdown.hidden === false;
+        sortDropdown.hidden = isOpen;
+        sortTrigger.setAttribute("aria-expanded", String(!isOpen));
+      });
+
+      sortOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          activeSort = option.dataset.sort;
+          sortLabel.textContent = option.textContent;
+          sortOptions.forEach((o) => o.classList.remove("is-active"));
+          option.classList.add("is-active");
+          sortDropdown.hidden = true;
+          sortTrigger.setAttribute("aria-expanded", "false");
+          runWithSpinner(applySort);
+        });
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!document.getElementById("sort-control").contains(e.target)) {
+          sortDropdown.hidden = true;
+          sortTrigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
   }
 }
 
@@ -554,7 +706,7 @@ if (page === "product") {
 
   if (questionButton) {
     questionButton.href = `https://wa.me/31600000000?text=${encodeURIComponent(
-      `Hi, ik heb een vraag over de ${product.model}`
+      `Hi, I have a question about the ${product.model}`
     )}`;
     questionButton.target = "_blank";
     questionButton.rel = "noreferrer";
@@ -581,7 +733,7 @@ if (page === "verkoop") {
         submitButton.dataset.state = "success";
         submitButton.classList.remove("is-loading");
         submitButton.classList.add("is-success");
-        submitButton.innerHTML = "Aanbieding verstuurd ✓";
+        submitButton.innerHTML = "Offer sent ✓";
       }, 1500);
     });
   }
