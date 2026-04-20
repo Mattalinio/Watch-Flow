@@ -519,21 +519,6 @@ if (page === "home") {
 
 if (page === "collection") {
   const collectionGrid = document.querySelector("#collection-grid");
-  const brandFilterBar = document.querySelector("#brand-filter-bar");
-
-  if (brandFilterBar) {
-    const uniqueBrands = [...new Map(products.map((p) => [p.brandSlug, p.brand])).entries()];
-    uniqueBrands.forEach(([slug, name]) => {
-      const btn = document.createElement("button");
-      btn.className = "filter-tab";
-      btn.type = "button";
-      btn.dataset.filter = slug;
-      btn.textContent = name.toUpperCase();
-      brandFilterBar.appendChild(btn);
-    });
-  }
-
-  const filterTabs = document.querySelectorAll(".filter-tab[data-filter]");
 
   if (collectionGrid) {
     collectionGrid.innerHTML = products.map((product, index) => watchCardTemplate(product, index)).join("");
@@ -555,12 +540,17 @@ if (page === "collection") {
     let activeBrand = "all";
     let activeSort = "price-high";
 
+    const brandControl = document.getElementById("brand-control");
+    const brandTrigger = document.getElementById("brand-trigger");
+    const brandDropdown = document.getElementById("brand-dropdown");
+    const brandLabel = document.getElementById("brand-label");
+    const brandOptions = document.querySelectorAll(".brand-option");
     const sortTrigger = document.getElementById("sort-trigger");
     const sortDropdown = document.getElementById("sort-dropdown");
     const sortLabel = document.getElementById("sort-label");
     const sortOptions = document.querySelectorAll(".sort-option");
 
-    const applyBrandFilter = () => {
+    const filterProducts = () => {
       cards.forEach((card) => {
         const match = activeBrand === "all" || card.dataset.brand === activeBrand;
         card.classList.toggle("is-hidden", !match);
@@ -587,15 +577,27 @@ if (page === "collection") {
     };
 
     applySort();
+    filterProducts();
 
-    filterTabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        activeBrand = tab.dataset.filter;
-        filterTabs.forEach((item) => item.classList.remove("is-active"));
-        tab.classList.add("is-active");
-        runWithSpinner(applyBrandFilter);
+    if (brandTrigger && brandDropdown) {
+      brandTrigger.addEventListener("click", () => {
+        const isOpen = brandDropdown.hidden === false;
+        brandDropdown.hidden = isOpen;
+        brandTrigger.setAttribute("aria-expanded", String(!isOpen));
       });
-    });
+
+      brandOptions.forEach((option) => {
+        option.addEventListener("click", () => {
+          activeBrand = option.dataset.brand;
+          brandLabel.textContent = option.textContent.toUpperCase();
+          brandOptions.forEach((item) => item.classList.remove("is-active"));
+          option.classList.add("is-active");
+          brandDropdown.hidden = true;
+          brandTrigger.setAttribute("aria-expanded", "false");
+          runWithSpinner(filterProducts);
+        });
+      });
+    }
 
     if (sortTrigger && sortDropdown) {
       sortTrigger.addEventListener("click", () => {
@@ -617,6 +619,10 @@ if (page === "collection") {
       });
 
       document.addEventListener("click", (e) => {
+        if (brandControl && !brandControl.contains(e.target)) {
+          brandDropdown.hidden = true;
+          brandTrigger.setAttribute("aria-expanded", "false");
+        }
         if (!document.getElementById("sort-control").contains(e.target)) {
           sortDropdown.hidden = true;
           sortTrigger.setAttribute("aria-expanded", "false");

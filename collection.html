@@ -23,7 +23,7 @@
         <a href="index.html" class="nav-logo" aria-label="Watch Flow home">
           <img
             class="nav-logo-image"
-            src="images/logo/watchflow-logo-transparent.png"
+            src="images/logo/watchflow-logo-bezel-transparent V2.png"
             alt="Watch Flow"
           />
         </a>
@@ -54,8 +54,19 @@
         </section>
 
         <div class="collection-controls">
-          <div class="filter-bar" id="brand-filter-bar">
-            <button class="filter-tab is-active" type="button" data-filter="all">ALL</button>
+          <div class="brand-control" id="brand-control">
+            <button class="brand-trigger" type="button" id="brand-trigger" aria-expanded="false" aria-haspopup="listbox">
+              <span id="brand-label">ALL WATCHES</span>
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <div class="brand-dropdown" id="brand-dropdown" hidden role="listbox">
+              <button class="brand-option is-active" type="button" data-brand="all">All Watches</button>
+              <button class="brand-option" type="button" data-brand="seiko">Seiko</button>
+              <button class="brand-option" type="button" data-brand="rolex">Rolex</button>
+              <button class="brand-option" type="button" data-brand="tudor">Tudor</button>
+              <button class="brand-option" type="button" data-brand="tissot">Tissot</button>
+              <button class="brand-option" type="button" data-brand="omega">Omega</button>
+            </div>
           </div>
 
           <div class="sort-control" id="sort-control">
@@ -76,7 +87,7 @@
       <footer class="site-footer">
         <div class="footer-top">
           <div class="footer-column footer-brand-block">
-            <img class="footer-logo-img" src="images/logo/watchflow-logo-transparent.png" alt="Watch Flow" />
+            <img class="footer-logo-img" src="images/logo/watchflow-logo-bezel-transparent V2.png" alt="Watch Flow" />
             <p class="footer-tagline">Pre-owned timepieces. Personal service. Amsterdam.</p>
           </div>
           <div class="footer-column">
@@ -91,7 +102,7 @@
             <p class="footer-heading">Connect</p>
             <div class="footer-links">
               <a href="https://wa.me/31600000000" target="_blank" rel="noreferrer">WHATSAPP</a>
-              <a href="#">INSTAGRAM</a>
+              <a href="https://www.instagram.com/watch_flow_/" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
             </div>
           </div>
         </div>
