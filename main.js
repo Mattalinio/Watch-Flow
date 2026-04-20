@@ -521,114 +521,177 @@ if (page === "collection") {
   const collectionGrid = document.querySelector("#collection-grid");
 
   if (collectionGrid) {
-    collectionGrid.innerHTML = products.map((product, index) => watchCardTemplate(product, index)).join("");
-    const gridSpinner = document.createElement("div");
-    gridSpinner.className = "grid-spinner";
-    gridSpinner.innerHTML = spinnerMarkup();
-    collectionGrid.appendChild(gridSpinner);
-    initScrollAnimations(collectionGrid);
-    initPriceAnimations(collectionGrid);
+    // ── Map Shopify API product to the format watchCardTemplate expects ──
+    const mapShopifyProduct = (node, index) => {
+      const KNOWN_BRANDS = ["ROLEX", "OMEGA", "SEIKO", "TISSOT", "TUDOR", "AUDEMARS PIGUET"];
+      let brandSlug = "unknown";
+      let brandName = "Unknown";
 
-    const cards = Array.from(collectionGrid.querySelectorAll(".watch-card"));
+      for (const tag of node.tags) {
+        const upper = tag.toUpperCase();
+        const match = KNOWN_BRANDS.find((b) => upper.includes(b));
+        if (match) {
+          brandName = match.charAt(0) + match.slice(1).toLowerCase();
+          brandSlug = match.toLowerCase().replace(/\s+/g, "-");
+          break;
+        }
+      }
 
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        navigateWithSpinner(`product.html?id=${card.dataset.id}`);
+      // Pull optional metadata from tags: "year:2022", "ref:126610LN", "condition:Unworn"
+      const tagMap = {};
+      node.tags.forEach((tag) => {
+        const [k, v] = tag.split(":");
+        if (k && v) tagMap[k.toLowerCase()] = v.trim();
       });
-    });
 
-    let activeBrand = "all";
-    let activeSort = "price-high";
+      return {
+        id: node.id,
+        brand: brandName,
+        brandSlug,
+        model: node.title,
+        ref: tagMap.ref || "",
+        price: node.price,
+        condition: tagMap.condition || "Very Good",
+        year: Number(tagMap.year) || new Date().getFullYear(),
+        image: node.images[0] || "",
+        inStock: node.inStock,
+      };
+    };
 
-    const brandControl = document.getElementById("brand-control");
-    const brandTrigger = document.getElementById("brand-trigger");
-    const brandDropdown = document.getElementById("brand-dropdown");
-    const brandLabel = document.getElementById("brand-label");
-    const brandOptions = document.querySelectorAll(".brand-option");
-    const sortTrigger = document.getElementById("sort-trigger");
-    const sortDropdown = document.getElementById("sort-dropdown");
-    const sortLabel = document.getElementById("sort-label");
-    const sortOptions = document.querySelectorAll(".sort-option");
+    // ── Render cards and wire up interactions ──
+    const renderGrid = (productList) => {
+      collectionGrid.innerHTML = productList
+        .map((p, i) => watchCardTemplate(p, i))
+        .join("");
 
-    const filterProducts = () => {
+      const gridSpinner = document.createElement("div");
+      gridSpinner.className = "grid-spinner";
+      gridSpinner.innerHTML = spinnerMarkup();
+      collectionGrid.appendChild(gridSpinner);
+
+      initScrollAnimations(collectionGrid);
+      initPriceAnimations(collectionGrid);
+
+      const cards = Array.from(collectionGrid.querySelectorAll(".watch-card"));
       cards.forEach((card) => {
-        const match = activeBrand === "all" || card.dataset.brand === activeBrand;
-        card.classList.toggle("is-hidden", !match);
-      });
-    };
-
-    const applySort = () => {
-      const sorted = [...cards].sort((a, b) => {
-        const pa = Number(a.dataset.price);
-        const pb = Number(b.dataset.price);
-        return activeSort === "price-high" ? pb - pa : pa - pb;
-      });
-      sorted.forEach((card) => collectionGrid.insertBefore(card, gridSpinner));
-    };
-
-    const runWithSpinner = (fn) => {
-      gridSpinner.classList.add("visible");
-      window.setTimeout(() => {
-        fn();
-        gridSpinner.classList.remove("visible");
-        window.setTimeout(() => initScrollAnimations(collectionGrid), 50);
-        window.setTimeout(() => initPriceAnimations(collectionGrid), 50);
-      }, 200);
-    };
-
-    applySort();
-    filterProducts();
-
-    if (brandTrigger && brandDropdown) {
-      brandTrigger.addEventListener("click", () => {
-        const isOpen = brandDropdown.hidden === false;
-        brandDropdown.hidden = isOpen;
-        brandTrigger.setAttribute("aria-expanded", String(!isOpen));
-      });
-
-      brandOptions.forEach((option) => {
-        option.addEventListener("click", () => {
-          activeBrand = option.dataset.brand;
-          brandLabel.textContent = option.textContent.toUpperCase();
-          brandOptions.forEach((item) => item.classList.remove("is-active"));
-          option.classList.add("is-active");
-          brandDropdown.hidden = true;
-          brandTrigger.setAttribute("aria-expanded", "false");
-          runWithSpinner(filterProducts);
-        });
-      });
-    }
-
-    if (sortTrigger && sortDropdown) {
-      sortTrigger.addEventListener("click", () => {
-        const isOpen = sortDropdown.hidden === false;
-        sortDropdown.hidden = isOpen;
-        sortTrigger.setAttribute("aria-expanded", String(!isOpen));
-      });
-
-      sortOptions.forEach((option) => {
-        option.addEventListener("click", () => {
-          activeSort = option.dataset.sort;
-          sortLabel.textContent = option.textContent;
-          sortOptions.forEach((o) => o.classList.remove("is-active"));
-          option.classList.add("is-active");
-          sortDropdown.hidden = true;
-          sortTrigger.setAttribute("aria-expanded", "false");
-          runWithSpinner(applySort);
+        card.addEventListener("click", () => {
+          navigateWithSpinner(`product.html?id=${card.dataset.id}`);
         });
       });
 
-      document.addEventListener("click", (e) => {
-        if (brandControl && !brandControl.contains(e.target)) {
-          brandDropdown.hidden = true;
-          brandTrigger.setAttribute("aria-expanded", "false");
-        }
-        if (!document.getElementById("sort-control").contains(e.target)) {
-          sortDropdown.hidden = true;
-          sortTrigger.setAttribute("aria-expanded", "false");
-        }
-      });
-    }
+      let activeBrand = "all";
+      let activeSort = "price-high";
+
+      const brandControl = document.getElementById("brand-control");
+      const brandTrigger = document.getElementById("brand-trigger");
+      const brandDropdown = document.getElementById("brand-dropdown");
+      const brandLabel = document.getElementById("brand-label");
+      const brandOptions = document.querySelectorAll(".brand-option");
+      const sortTrigger = document.getElementById("sort-trigger");
+      const sortDropdown = document.getElementById("sort-dropdown");
+      const sortLabel = document.getElementById("sort-label");
+      const sortOptions = document.querySelectorAll(".sort-option");
+
+      const filterProducts = () => {
+        cards.forEach((card) => {
+          const match = activeBrand === "all" || card.dataset.brand === activeBrand;
+          card.classList.toggle("is-hidden", !match);
+        });
+      };
+
+      const applySort = () => {
+        const sorted = [...cards].sort((a, b) => {
+          const pa = Number(a.dataset.price);
+          const pb = Number(b.dataset.price);
+          return activeSort === "price-high" ? pb - pa : pa - pb;
+        });
+        sorted.forEach((card) => collectionGrid.insertBefore(card, gridSpinner));
+      };
+
+      const runWithSpinner = (fn) => {
+        gridSpinner.classList.add("visible");
+        window.setTimeout(() => {
+          fn();
+          gridSpinner.classList.remove("visible");
+          window.setTimeout(() => initScrollAnimations(collectionGrid), 50);
+          window.setTimeout(() => initPriceAnimations(collectionGrid), 50);
+        }, 200);
+      };
+
+      applySort();
+      filterProducts();
+
+      if (brandTrigger && brandDropdown) {
+        brandTrigger.addEventListener("click", () => {
+          const isOpen = brandDropdown.hidden === false;
+          brandDropdown.hidden = isOpen;
+          brandTrigger.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        brandOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            activeBrand = option.dataset.brand;
+            brandLabel.textContent = option.textContent.toUpperCase();
+            brandOptions.forEach((item) => item.classList.remove("is-active"));
+            option.classList.add("is-active");
+            brandDropdown.hidden = true;
+            brandTrigger.setAttribute("aria-expanded", "false");
+            runWithSpinner(filterProducts);
+          });
+        });
+      }
+
+      if (sortTrigger && sortDropdown) {
+        sortTrigger.addEventListener("click", () => {
+          const isOpen = sortDropdown.hidden === false;
+          sortDropdown.hidden = isOpen;
+          sortTrigger.setAttribute("aria-expanded", String(!isOpen));
+        });
+
+        sortOptions.forEach((option) => {
+          option.addEventListener("click", () => {
+            activeSort = option.dataset.sort;
+            sortLabel.textContent = option.textContent;
+            sortOptions.forEach((o) => o.classList.remove("is-active"));
+            option.classList.add("is-active");
+            sortDropdown.hidden = true;
+            sortTrigger.setAttribute("aria-expanded", "false");
+            runWithSpinner(applySort);
+          });
+        });
+
+        document.addEventListener("click", (e) => {
+          if (brandControl && !brandControl.contains(e.target)) {
+            brandDropdown.hidden = true;
+            brandTrigger.setAttribute("aria-expanded", "false");
+          }
+          if (!document.getElementById("sort-control").contains(e.target)) {
+            sortDropdown.hidden = true;
+            sortTrigger.setAttribute("aria-expanded", "false");
+          }
+        });
+      }
+    };
+
+    // ── Show loading skeleton, then fetch from Vercel /api/products ──
+    collectionGrid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px 0;opacity:.5">${spinnerMarkup()}</div>`;
+
+    (async () => {
+      let productList;
+      try {
+        const response = await fetch("/api/products");
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        if (data.error) throw new Error(String(data.error));
+        if (!data.products || data.products.length === 0) throw new Error("Empty response");
+        productList = data.products.map(mapShopifyProduct);
+        console.log(`[WatchFlow] ${productList.length} products loaded from Shopify.`);
+      } catch (err) {
+        console.warn("[WatchFlow] /api/products failed, using hardcoded fallback.", err.message);
+        productList = products; // hardcoded array at top of file
+      }
+      renderGrid(productList);
+    })();
   }
 }
 
