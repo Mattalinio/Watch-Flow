@@ -1,125 +1,37 @@
-const products = [
-  {
-    id: 1,
-    brand: "Rolex",
-    brandSlug: "rolex",
-    model: "Submariner Date",
-    ref: "126610LN",
-    price: 11500,
-    condition: "Unworn",
-    year: 2023,
-    desc: "The iconic Submariner in stainless steel. Unworn with full set including box and papers.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "images/products/seiko%20random%201.webp",
-  },
-  {
-    id: 2,
-    brand: "Rolex",
-    brandSlug: "rolex",
-    model: "Datejust 41",
-    ref: "126300",
-    price: 8200,
-    condition: "Very Good",
-    year: 2021,
-    desc: "Classic Datejust 41 in steel with Jubilee bracelet. Excellent condition, minor signs of wear.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "images/products/seiko%20random%202.png",
-  },
-  {
-    id: 3,
-    brand: "Audemars Piguet",
-    brandSlug: "audemars-piguet",
-    model: "Royal Oak",
-    ref: "15510ST",
-    price: 24900,
-    condition: "Unworn",
-    year: 2022,
-    desc: "The legendary Royal Oak in stainless steel. Full set, unworn, complete with AP documentation.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "images/products/seiko%20random%203.jpeg",
-  },
-  {
-    id: 4,
-    brand: "Omega",
-    brandSlug: "omega",
-    model: "Speedmaster Moonwatch",
-    ref: "310.30.42.50.01.001",
-    price: 5800,
-    condition: "Very Good",
-    year: 2020,
-    desc: "Iconic Moonwatch with manual winding movement. Serviced, excellent condition.",
-    movement: "Manual",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "",
-  },
-  {
-    id: 5,
-    brand: "Rolex",
-    brandSlug: "rolex",
-    model: 'GMT-Master II "Pepsi"',
-    ref: "126710BLRO",
-    price: 17400,
-    condition: "Like New",
-    year: 2022,
-    desc: "The Pepsi GMT in steel on jubilee. Barely worn, full set with stickers.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "",
-  },
-  {
-    id: 6,
-    brand: "Omega",
-    brandSlug: "omega",
-    model: "Seamaster 300M",
-    ref: "210.30.42.20.03.001",
-    price: 4100,
-    condition: "Very Good",
-    year: 2021,
-    desc: "Bond watch in steel. Excellent condition, full set.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "",
-  },
-  {
-    id: 7,
-    brand: "Seiko",
-    brandSlug: "seiko",
-    model: "5 Sports SRPE55",
-    ref: "SRPE55K1",
-    price: 199,
-    condition: "Very Good",
-    year: 2022,
-    desc: "Casual Seiko 5 Sports in blue dial. Reliable automatic, great everyday wearer.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "No",
-    image: "images/products/seiko%20random%201.webp",
-  },
-  {
-    id: 8,
-    brand: "Seiko",
-    brandSlug: "seiko",
-    model: "Prospex Diver",
-    ref: "SPB187J1",
-    price: 649,
-    condition: "Like New",
-    year: 2023,
-    desc: "Seiko Prospex diver in steel. Barely worn, excellent condition with box.",
-    movement: "Automatic",
-    caseMaterial: "Stainless Steel",
-    boxPapers: "Yes",
-    image: "images/products/seiko%20random%202.png",
-  },
-];
+const normalizeProduct = (product, index = 0) => ({
+  id: product.id ?? product.handle ?? index + 1,
+  handle: product.handle ?? String(product.id ?? index + 1),
+  brand: product.brand ?? product.vendor ?? "Watch Flow",
+  brandSlug:
+    product.brandSlug ??
+    (product.brand ?? product.vendor ?? "watch-flow")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, ""),
+  model: product.model ?? product.title ?? "Untitled Piece",
+  ref: product.ref ?? product.reference ?? "On Request",
+  price: Number(product.price ?? 0),
+  condition: product.condition ?? "Available",
+  year: product.year ?? "On Request",
+  desc: product.desc ?? product.description ?? "Detailed product information will appear here once Shopify inventory is connected.",
+  movement: product.movement ?? "On Request",
+  caseMaterial: product.caseMaterial ?? product.case_material ?? "On Request",
+  boxPapers: product.boxPapers ?? product.box_papers ?? "On Request",
+  image:
+    product.image ??
+    product.featuredImage?.url ??
+    product.featuredImage?.src ??
+    product.featuredImage ??
+    product.featured_image?.url ??
+    product.featured_image?.src ??
+    product.featured_image ??
+    "",
+});
+
+const shopifyProducts = Array.isArray(window.__WATCHFLOW_PRODUCTS__) ? window.__WATCHFLOW_PRODUCTS__ : [];
+const products = shopifyProducts.map(normalizeProduct);
 
 const page = document.body.dataset.page;
 const navbar = document.querySelector("#site-header");
@@ -154,6 +66,21 @@ const spinnerMarkup = () => `
       <line class="wf-spinner-hand" x1="20" y1="20" x2="20" y2="5" stroke="#a8c4d4" stroke-width="1" stroke-linecap="round"></line>
       <circle cx="20" cy="20" r="1.5" fill="#a8c4d4"></circle>
     </svg>
+  </div>
+`;
+
+const emptyStateMarkup = ({
+  kicker = "Coming Soon",
+  title,
+  text,
+  actionHref = "contact.html",
+  actionLabel = "Contact Watch Flow",
+}) => `
+  <div class="empty-state-card">
+    <p class="section-kicker">${kicker}</p>
+    <h3>${title}</h3>
+    <p>${text}</p>
+    <a class="button secondary-button empty-state-button" href="${actionHref}">${actionLabel}</a>
   </div>
 `;
 
@@ -388,7 +315,7 @@ function initPriceAnimations(scope = document) {
 }
 
 const watchCardTemplate = (product, index = 0) => `
-  <article class="watch-card product-card fade-up stagger-${(index % 6) + 1}" data-brand="${product.brandSlug}" data-id="${product.id}" data-price="${product.price}">
+  <article class="watch-card product-card fade-up stagger-${(index % 6) + 1}" data-brand="${product.brandSlug}" data-id="${product.handle || product.id}" data-price="${product.price}">
     <div class="watch-visual">
       <span class="${conditionClass(product.condition)}">${product.condition}</span>
       ${
@@ -504,23 +431,52 @@ if (page === "home") {
   initHeroClock();
   initHeroSequence();
   const featuredGrid = document.querySelector("#featured-grid");
+  const featuredSection = document.querySelector(".featured-section");
+  const featuredLink = document.querySelector(".featured-section .view-link");
 
   if (featuredGrid) {
-    featuredGrid.innerHTML = products.slice(0, 3).map((product, index) => watchCardTemplate(product, index)).join("");
-    initScrollAnimations(featuredGrid);
-    initPriceAnimations(featuredGrid);
-    featuredGrid.querySelectorAll(".watch-card").forEach((card) => {
-      card.addEventListener("click", () => {
-        navigateWithSpinner(`product.html?id=${card.dataset.id}`);
+    if (products.length) {
+      featuredGrid.innerHTML = products.slice(0, 3).map((product, index) => watchCardTemplate(product, index)).join("");
+      initScrollAnimations(featuredGrid);
+      initPriceAnimations(featuredGrid);
+      featuredGrid.querySelectorAll(".watch-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          navigateWithSpinner(`product.html?id=${card.dataset.id}`);
+        });
       });
-    });
+    } else {
+      featuredGrid.classList.add("is-empty-grid");
+      featuredGrid.innerHTML = emptyStateMarkup({
+        kicker: "Shopify Ready",
+        title: "Collection items will appear here once the store inventory is connected.",
+        text: "The homepage is ready for dynamic featured products. As soon as Shopify products are available, selected pieces can be surfaced here automatically.",
+        actionHref: "contact.html",
+        actionLabel: "Get In Touch",
+      });
+      if (featuredLink) featuredLink.style.display = "none";
+      if (featuredSection) featuredSection.classList.add("is-empty-section");
+    }
   }
 }
 
 if (page === "collection") {
   const collectionGrid = document.querySelector("#collection-grid");
+  const collectionControls = document.querySelector(".collection-controls");
 
   if (collectionGrid) {
+    if (!products.length) {
+      collectionGrid.classList.add("is-empty-grid");
+      collectionGrid.innerHTML = emptyStateMarkup({
+        kicker: "Collection Pending",
+        title: "No watches are currently published.",
+        text: "This collection page is ready for Shopify. Once products are added in the store, filters and sorting will populate automatically.",
+        actionHref: "contact.html",
+        actionLabel: "Contact Watch Flow",
+      });
+      if (collectionControls) collectionControls.classList.add("is-hidden");
+      return;
+    }
+
     collectionGrid.innerHTML = products.map((product, index) => watchCardTemplate(product, index)).join("");
     const gridSpinner = document.createElement("div");
     gridSpinner.className = "grid-spinner";
@@ -544,11 +500,23 @@ if (page === "collection") {
     const brandTrigger = document.getElementById("brand-trigger");
     const brandDropdown = document.getElementById("brand-dropdown");
     const brandLabel = document.getElementById("brand-label");
-    const brandOptions = document.querySelectorAll(".brand-option");
     const sortTrigger = document.getElementById("sort-trigger");
     const sortDropdown = document.getElementById("sort-dropdown");
     const sortLabel = document.getElementById("sort-label");
     const sortOptions = document.querySelectorAll(".sort-option");
+
+    if (brandDropdown) {
+      const uniqueBrands = [...new Map(products.map((product) => [product.brandSlug, product.brand])).entries()];
+      brandDropdown.innerHTML = [
+        '<button class="brand-option is-active" type="button" data-brand="all">All Watches</button>',
+        ...uniqueBrands.map(
+          ([slug, name]) =>
+            `<button class="brand-option" type="button" data-brand="${slug}">${name}</button>`
+        ),
+      ].join("");
+    }
+
+    const brandOptions = document.querySelectorAll(".brand-option");
 
     const filterProducts = () => {
       cards.forEach((card) => {
@@ -633,9 +601,26 @@ if (page === "collection") {
 }
 
 if (page === "product") {
+  if (!products.length) {
+    const productLayout = document.querySelector("#product-layout");
+    if (productLayout) {
+      productLayout.classList.add("product-layout-empty");
+      productLayout.innerHTML = emptyStateMarkup({
+        kicker: "Product Pending",
+        title: "No product is currently selected.",
+        text: "The product detail page is prepared for Shopify-driven inventory. When products are published, this page can render the selected watch automatically.",
+        actionHref: "collection.html",
+        actionLabel: "Back to Collection",
+      });
+    }
+    return;
+  }
+
   const params = new URLSearchParams(window.location.search);
-  const productId = Number(params.get("id")) || 1;
-  const product = products.find((item) => item.id === productId) || products[0];
+  const productKey = params.get("id");
+  const product =
+    products.find((item) => String(item.handle || item.id) === String(productKey)) ||
+    products[0];
 
   const brand = document.querySelector("#product-brand");
   const model = document.querySelector("#product-model");

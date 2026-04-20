@@ -751,6 +751,10 @@ h2 {
     linear-gradient(180deg, #19222f 0%, #131b24 100%);
 }
 
+.featured-section.is-empty-section {
+  padding-bottom: 112px;
+}
+
 .section-head {
   margin-bottom: 28px;
 }
@@ -906,9 +910,48 @@ h2 {
   padding: 0 48px;
 }
 
+.watch-grid.is-empty-grid {
+  display: block;
+  min-height: auto;
+}
+
 .collection-grid {
   position: relative;
   min-height: 220px;
+}
+
+.collection-controls.is-hidden {
+  display: none;
+}
+
+.empty-state-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.3rem 2.4rem;
+  border-radius: 22px;
+  border: 1px solid rgba(30, 90, 125, 0.12);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(242, 246, 249, 0.98) 100%);
+  box-shadow: 0 20px 44px rgba(15, 20, 25, 0.06);
+  text-align: left;
+}
+
+.empty-state-card h3 {
+  margin-top: 0.85rem;
+  color: var(--text-primary);
+  font-family: "Cormorant Garamond", serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  line-height: 1.02;
+}
+
+.empty-state-card p:last-of-type {
+  margin-top: 1rem;
+  max-width: 42rem;
+  color: var(--text-secondary);
+  line-height: 1.85;
+}
+
+.empty-state-button {
+  margin-top: 1.4rem;
 }
 
 .watch-card {
@@ -1186,6 +1229,11 @@ h2 {
   grid-template-columns: minmax(0, 60%) minmax(340px, 40%);
   gap: 64px;
   padding: 80px 48px;
+}
+
+.product-layout.product-layout-empty {
+  display: block;
+  padding-top: 88px;
 }
 
 .contact-layout {
