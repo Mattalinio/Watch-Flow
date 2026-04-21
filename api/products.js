@@ -1,11 +1,9 @@
-// Vercel Serverless Function - Shopify Proxy
+// Vercel Serverless Function - Shopify Public Products Proxy
 const SHOP = process.env.SHOPIFY_SHOP || 'watch-flow-7721.myshopify.com';
-const TOKEN = process.env.SHOPIFY_TOKEN;
 
 export default async function handler(req, res) {
-  // Enable CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
@@ -13,66 +11,23 @@ export default async function handler(req, res) {
   }
 
   try {
-    const query = `{
-      products(first: 50) {
-        edges {
-          node {
-            id
-            title
-            description
-            priceRangeV2 {
-              minVariantPrice {
-                amount
-                currencyCode
-              }
-            }
-            images(first: 5) {
-              edges {
-                node {
-                  url
-                  altText
-                }
-              }
-            }
-            variants(first: 1) {
-              edges {
-                node {
-                  id
-                  availableForSale
-                }
-              }
-            }
-            tags
-          }
-        }
-      }
-    }`;
+    const response = await fetch(`https://${SHOP}/products.json?limit=250`);
 
-    const response = await fetch(`https://${SHOP}/admin/api/2024-04/graphql.json`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Shopify-Access-Token': TOKEN
-      },
-      body: JSON.stringify({ query })
-    });
+    if (!response.ok) {
+      return res.status(response.status).json({ error: `Shopify returned ${response.status}` });
+    }
 
     const data = await response.json();
 
-    if (data.errors) {
-      return res.status(500).json({ error: data.errors });
-    }
-
-    // Map to simple format
-    const products = data.data.products.edges.map(({ node }) => ({
-      id: node.id,
-      title: node.title,
-      description: node.description,
-      price: parseFloat(node.priceRangeV2.minVariantPrice.amount),
-      currency: node.priceRangeV2.minVariantPrice.currencyCode,
-      images: node.images.edges.map(img => img.node.url),
-      inStock: node.variants.edges[0]?.node.availableForSale || false,
-      tags: node.tags
+    const products = data.products.map(p => ({
+      id: `gid://shopify/Product/${p.id}`,
+      title: p.title,
+      description: p.body_html?.replace(/<[^>]+>/g, '') || '',
+      price: parseFloat(p.variants[0]?.price || 0),
+      currency: 'EUR',
+      images: p.images.map(img => img.src),
+      inStock: p.variants.some(v => v.available),
+      tags: p.tags ? p.tags.split(', ') : []
     }));
 
     return res.status(200).json({ products });
